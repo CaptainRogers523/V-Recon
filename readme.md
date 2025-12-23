@@ -67,7 +67,7 @@ cd v-recon
 chmod +x install_tools.sh
 
 # Run the installer
-./install_go_tools.sh
+./install_tools.sh
 ```
 
 **The installer will:**
