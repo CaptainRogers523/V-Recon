@@ -43,7 +43,6 @@ A comprehensive subdomain enumeration and URL discovery tool that combines multi
 | **Waybackurls** | Fetch URLs from Wayback Machine |
 | **GAU** | GetAllUrls - fetch known URLs from multiple sources |
 | **Paramspider** | Discover URLs with parameters |
-| **Hakrawler** | Additional web crawling |
 
 ---
 
@@ -150,7 +149,6 @@ target-domain/
 ├── wayback_urls.txt        # Archived URLs from Wayback
 ├── gau_urls.txt            # URLs from GAU
 ├── param_urls.txt          # Parameter-based URLs
-└── hakrawler_urls.txt      # URLs from Hakrawler
 ```
 
 ### Key Files
@@ -268,7 +266,7 @@ To update tools to latest versions:
 
 ```bash
 # Re-run the installer
-./install_go_tools.sh
+./install_tools.sh
 ```
 
 ---
@@ -297,7 +295,6 @@ Thanks to the creators of:
 - ProjectDiscovery (Subfinder, HTTPX, Katana)
 - Tom Hudson (Assetfinder, Waybackurls)
 - Devansh Batham (ParamSpider)
-- Luke Stephens (Hakrawler)
 - And the entire bug bounty community
 
 ---
