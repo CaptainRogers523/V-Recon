@@ -64,7 +64,7 @@ Run the installer script that will set up everything:
 cd v-recon
 
 # Make installer executable
-chmod +x install_go.sh
+chmod +x install_tools.sh
 
 # Run the installer
 ./install_go_tools.sh
