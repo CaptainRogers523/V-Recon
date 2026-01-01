@@ -9,7 +9,8 @@ NC='\033[0m'
 
 clear
 echo -e "${CYAN}================================================${NC}"
-echo -e "${CYAN}  V-RECON Complete Tool Installer${NC}"
+echo -e "${CYAN}  V-RECON v1.0 - Complete Tool Installer${NC}"
+echo -e "${CYAN}  By Vinayak Prajapati${NC}"
 echo -e "${CYAN}================================================${NC}\n"
 
 # Check if running as root for apt install
@@ -110,19 +111,49 @@ if command -v apt &> /dev/null; then
     if sudo apt install -y paramspider 2>/dev/null; then
         echo -e "${GREEN}✓ Paramspider installed via apt${NC}\n"
     else
-        # Fallback to pip
-        echo -e "${YELLOW}[!] apt failed, trying pip...${NC}"
+        # Fallback to pipx (recommended) or pip
+        echo -e "${YELLOW}[!] apt failed, trying pipx...${NC}"
+        if command -v pipx &> /dev/null; then
+            pipx install paramspider 2>/dev/null
+            echo -e "${GREEN}✓ Paramspider installed via pipx${NC}\n"
+        else
+            echo -e "${YELLOW}[!] pipx not found, trying pip...${NC}"
+            pip3 install paramspider 2>/dev/null || pip install paramspider 2>/dev/null
+            echo -e "${GREEN}✓ Paramspider installed via pip${NC}\n"
+        fi
+    fi
+else
+    # Use pipx/pip if apt not available
+    if command -v pipx &> /dev/null; then
+        pipx install paramspider 2>/dev/null
+        echo -e "${GREEN}✓ Paramspider installed via pipx${NC}\n"
+    else
         pip3 install paramspider 2>/dev/null || pip install paramspider 2>/dev/null
         echo -e "${GREEN}✓ Paramspider installed via pip${NC}\n"
     fi
-else
-    # Use pip if apt not available
-    pip3 install paramspider 2>/dev/null || pip install paramspider 2>/dev/null
-    echo -e "${GREEN}✓ Paramspider installed via pip${NC}\n"
 fi
 
 # ============================================
-# STEP 5: Verify Installation
+# STEP 5: Install EyeWitness (Optional)
+# ============================================
+echo -e "${CYAN}[STEP 5] Installing EyeWitness...${NC}"
+echo -e "${YELLOW}[!] EyeWitness requires additional setup${NC}"
+
+if command -v eyewitness &> /dev/null; then
+    echo -e "${GREEN}✓ EyeWitness already installed${NC}\n"
+else
+    echo -e "${YELLOW}[!] EyeWitness not found${NC}"
+    echo -e "${CYAN}To install EyeWitness, run:${NC}"
+    echo -e "${YELLOW}  git clone https://github.com/FortyNorthSecurity/EyeWitness.git${NC}"
+    echo -e "${YELLOW}  cd EyeWitness/Python/setup${NC}"
+    echo -e "${YELLOW}  sudo ./setup.sh${NC}"
+    echo -e "${CYAN}Or via pipx:${NC}"
+    echo -e "${YELLOW}  pipx install eyewitness${NC}\n"
+    echo -e "${YELLOW}[!] You can install it later, V-RECON will skip if not found${NC}\n"
+fi
+
+# ============================================
+# STEP 6: Verify Installation
 # ============================================
 echo -e "${CYAN}================================================${NC}"
 echo -e "${CYAN}  Verifying All Tools...${NC}"
@@ -140,15 +171,27 @@ for tool in "${TOOLS[@]}"; do
     fi
 done
 
+# Check EyeWitness separately (optional)
+if command -v eyewitness &> /dev/null; then
+    echo -e "${GREEN}✓ eyewitness ${NC}→ $(which eyewitness) ${CYAN}[OPTIONAL]${NC}"
+else
+    echo -e "${YELLOW}○ eyewitness not found ${CYAN}[OPTIONAL - Install manually]${NC}"
+fi
+
 echo ""
 
 if [ "$ALL_GOOD" = true ]; then
     echo -e "${GREEN}================================================${NC}"
-    echo -e "${GREEN}  ✓ All tools installed successfully!${NC}"
+    echo -e "${GREEN}  ✓ All core tools installed successfully!${NC}"
     echo -e "${GREEN}================================================${NC}\n"
     echo -e "${CYAN}Run: ${YELLOW}./v-recon.sh${NC} to start\n"
     echo -e "${YELLOW}[!] Restart your terminal or run:${NC}"
     echo -e "${YELLOW}    source $SHELL_RC${NC}\n"
+    
+    if ! command -v eyewitness &> /dev/null; then
+        echo -e "${CYAN}[INFO] EyeWitness is optional for screenshots${NC}"
+        echo -e "${CYAN}       V-RECON will work without it${NC}\n"
+    fi
 else
     echo -e "${RED}================================================${NC}"
     echo -e "${RED}  ✗ Some tools failed to install${NC}"
@@ -158,3 +201,8 @@ else
     echo -e "${YELLOW}  2. Run: source $SHELL_RC${NC}"
     echo -e "${YELLOW}  3. Run this script again${NC}\n"
 fi
+
+echo -e "${CYAN}================================================${NC}"
+echo -e "${CYAN}  Installation Complete!${NC}"
+echo -e "${CYAN}  V-RECON v1.0 by Vinayak Prajapati${NC}"
+echo -e "${CYAN}================================================${NC}"
