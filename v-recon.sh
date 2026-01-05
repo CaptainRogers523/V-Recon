@@ -358,10 +358,10 @@ echo -e "${GREEN}ParamSpider Params   : ${PARAM_COUNT}${NC}"
 echo -e "${GREEN}----------------------------------------${NC}"
 echo -e "${GREEN}Final Unified URLs   : ${FINAL_COUNT}${NC}"
 
-# EyeWitness status
+# Aquatone status
 if [ -d "screenshots" ] && [ -f "screenshots/report.html" ]; then
     echo -e "${GREEN}Screenshots          : ✓ Available${NC}"
-    echo -e "${CYAN}  → Open: screenshots/report.html${NC}"
+    echo -e "${CYAN}  → Open: aquatone_out/aquatone_report.html${NC}"
 elif [ -d "screenshots" ]; then
     echo -e "${YELLOW}Screenshots          : Skipped/Failed${NC}"
 else
@@ -372,7 +372,7 @@ echo -e "${CYAN}========================================${NC}"
 
 echo -e "\n${YELLOW}[+] Key Output Files:${NC}"
 echo -e "${CYAN}• live_hosts.txt${NC}"
-echo -e "${CYAN}• screenshots/report.html  ${GREEN}← NEW!${NC}"
+echo -e "${CYAN}• aquatone_out/aquatone_report.html  ${GREEN}← NEW!${NC}"
 echo -e "${CYAN}• katana_urls.txt${NC}"
 echo -e "${CYAN}• gau_urls.txt${NC}"
 echo -e "${CYAN}• wayback_urls.txt${NC}"
