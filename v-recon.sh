@@ -17,7 +17,7 @@ echo "   ╚████╔╝       ██║  ██║███████�
 echo "    ╚═══╝        ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝"
 echo -e "${NC}"
 echo -e "${GREEN}         [+] Author: CAPTAIN ROGERS${NC}"
-echo -e "${GREEN}         [+] Version: 5.6.2.8${NC}"
+echo -e "${GREEN}         [+] Version: v1.0${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 
 # Get target
@@ -116,6 +116,60 @@ else
     else
         echo -e "${YELLOW}! No subdomains to check${NC}"
         touch live_hosts.txt
+    fi
+fi
+
+# ===========================================
+# STEP 3.5: Aquatone (Screenshots)
+# ===========================================
+echo -e "\n${CYAN}[STEP 3.5] Taking Screenshots with Aquatone...${NC}"
+
+if ! command -v aquatone &> /dev/null; then
+    echo -e "${RED}✗ Aquatone not installed!${NC}"
+    echo -e "${YELLOW}Install:${NC}"
+    echo -e "${YELLOW}  1. Download latest release from GitHub (michenriksen/aquatone)${NC}"
+    echo -e "${YELLOW}  2. Extract and move to /usr/local/bin/${NC}"
+    echo -e "${YELLOW}Skipping Aquatone...${NC}"
+else
+    if [ -s live_hosts.txt ]; then
+        LIVE_COUNT=$(wc -l < live_hosts.txt)
+
+        if [ "$LIVE_COUNT" -gt 50 ]; then
+            echo -e "${YELLOW}⚠ Found $LIVE_COUNT live hosts. This might take time.${NC}"
+            echo -en "${YELLOW}Continue with Aquatone? (y/n): ${NC}"
+            read CONTINUE_AQUATONE
+
+            if [[ ! "$CONTINUE_AQUATONE" =~ ^[Yy]$ ]]; then
+                echo -e "${YELLOW}Skipping Aquatone...${NC}"
+                mkdir -p aquatone_out
+                echo "Aquatone skipped by user" > aquatone_out/skipped.txt
+            else
+                echo -e "${GREEN}[+] Starting Aquatone...${NC}"
+                # Aquatone standard input se read karta hai
+                cat live_hosts.txt | aquatone -out ./aquatone_out -threads 10
+
+                if [ -d "aquatone_out" ]; then
+                    echo -e "${GREEN}✓ Screenshots captured successfully!${NC}"
+                    echo -e "${CYAN}[+] Report location: aquatone_out/aquatone_report.html${NC}"
+                else
+                    echo -e "${YELLOW}! Aquatone output directory not created${NC}"
+                fi
+            fi
+        else
+            echo -e "${GREEN}[+] Taking screenshots of $LIVE_COUNT hosts...${NC}"
+            cat live_hosts.txt | aquatone -out ./aquatone_out -threads 10
+
+            if [ -d "aquatone_out" ]; then
+                echo -e "${GREEN}✓ Screenshots captured successfully!${NC}"
+                echo -e "${CYAN}[+] Report location: aquatone_out/aquatone_report.html${NC}"
+            else
+                echo -e "${YELLOW}! Aquatone output directory not created${NC}"
+            fi
+        fi
+    else
+        echo -e "${YELLOW}! No live hosts to screenshot${NC}"
+        mkdir -p aquatone_out
+        echo "No live hosts found" > aquatone_out/no_hosts.txt
     fi
 fi
 
@@ -303,10 +357,22 @@ echo -e "${GREEN}Wayback URLs         : ${WAYBACK_COUNT}${NC}"
 echo -e "${GREEN}ParamSpider Params   : ${PARAM_COUNT}${NC}"
 echo -e "${GREEN}----------------------------------------${NC}"
 echo -e "${GREEN}Final Unified URLs   : ${FINAL_COUNT}${NC}"
+
+# EyeWitness status
+if [ -d "screenshots" ] && [ -f "screenshots/report.html" ]; then
+    echo -e "${GREEN}Screenshots          : ✓ Available${NC}"
+    echo -e "${CYAN}  → Open: screenshots/report.html${NC}"
+elif [ -d "screenshots" ]; then
+    echo -e "${YELLOW}Screenshots          : Skipped/Failed${NC}"
+else
+    echo -e "${YELLOW}Screenshots          : Not captured${NC}"
+fi
+
 echo -e "${CYAN}========================================${NC}"
 
 echo -e "\n${YELLOW}[+] Key Output Files:${NC}"
 echo -e "${CYAN}• live_hosts.txt${NC}"
+echo -e "${CYAN}• screenshots/report.html  ${GREEN}← NEW!${NC}"
 echo -e "${CYAN}• katana_urls.txt${NC}"
 echo -e "${CYAN}• gau_urls.txt${NC}"
 echo -e "${CYAN}• wayback_urls.txt${NC}"
